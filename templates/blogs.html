@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>{{post.title_tag}}</title>
+{% endblock %}
+{% block content %}
+
+<main class="container">
+  
+
+
+  
+
+  
+  
+
+  <div class="row g-5">
+    <div class="col-md-8">
+      <h3 class="pb-4 mb-4 fst-italic border-bottom text-success text-uppercase" style="letter-spacing: 2px;">
+        Recent Articles
+      </h3>
+  
+      <article class="blog-post">
+        
+        <div class="col-md-12">
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-primary-emphasis"></strong>
+              <h3 class="mb-0">{{single_post}}</h3>
+
+              <div class="mt-2 text-body-secondary">posted on {{single_post.created_at}} by {{single_post.author}}</div>
+              <div class="mt-2 text-body-secondary"><h5 class="text text-danger">{{single_post.category}}</h5></div>
+
+              <p class="card-text mb-auto">{{single_post.short_description  }}</p>
+              
+            </div>
+            <div class="col-auto d-none d-lg-block">
+              <div style="width: 200px; height: 250px; overflow: hidden; position: relative;">
+                <img src="{{ single_post.blog_image.url }}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+              </div>
+            </div>
+          </div>
+        
+      </article>
+      <nav class="blog-pagination" aria-label="Pagination">
+        <a class="btn btn-outline-primary rounded-pill" href="#">Older</a>
+        <a class="btn btn-outline-secondary rounded-pill disabled" aria-disabled="true">Newer</a>
+      </nav>
+    </div>
+
+
+
+    
+  
+
+    <div class="col-md-4">
+      <div class="position-sticky" style="top: 2rem;">
+        
+        
+        <div>
+          <h4 class="fst-italic mt-3">Recent posts</h4>
+          <ul class="list-unstyled">
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+                <div class="col-lg-8">
+                  <h6 class="mb-0">Example blog post title</h6>
+                  <small class="text-body-secondary">January 15, 2024</small>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+                <div class="col-lg-8">
+                  <h6 class="mb-0">This is another blog post title</h6>
+                  <small class="text-body-secondary">January 14, 2024</small>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+                <div class="col-lg-8">
+                  <h6 class="mb-0">Longer blog post title: This one has multiple lines!</h6>
+                  <small class="text-body-secondary">January 13, 2024</small>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <form action="{% url 'search' %}" method="GET">
+          <div class="input-group">
+            <input type="search" class="form-control rounded" name="keyword" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            <button type="submit" class="btn btn-warning" data-mdb-ripple-init>search</button>
+          </div>
+          </form>
+        
+
+        <div class="p-4">
+          <h4 class="fst-italic">categories</h4>
+          <ol class="list-unstyled">
+            <!-- {% for cat in categories %}
+            <li><a href="{% url 'catgeory' cat.id  %}">{{cat.category_name}}</a></li>
+            {% endfor %} -->
+            {% for cat in categories %}
+      <a class="nav-item nav-link link-body-emphasis active" href="{% url 'catgeory' cat.id  %}">{{cat.category_name}} </a>
+      {% endfor %}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+{% endblock %}
