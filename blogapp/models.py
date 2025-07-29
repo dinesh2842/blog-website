@@ -36,6 +36,21 @@ class Blogs(models.Model):
   
   class Meta:
     verbose_name_plural='Blogs'
+
+class Subscribe(models.Model):
+  name = models.CharField(max_length=50)
+  email = models.EmailField(max_length=50)
+
+  def __str__(self):
+    return self.email
+  
+class Contact(Subscribe):
+  subject = models.TextField(max_length=200)
+  phone = models.CharField(max_length=20)
+
+  def __str__(self):
+    return self.name
+
   
   
 

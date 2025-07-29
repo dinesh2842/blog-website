@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+from decouple import config
 from pathlib import Path
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-u%3jd*-2ucb2d77p*647!i9x&)!z%8(g%h06(rf7tc6w*z#l%u'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',default=True,cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -39,6 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'dashboard',
+    'mailfireapp',
+    'django_celery_results',
+    'django_celery_beat',
+    
 ]
 
 MIDDLEWARE = [
@@ -78,8 +85,14 @@ WSGI_APPLICATION = 'blog_website.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'BlogWesbite',
+        'USER': 'postgres',
+        'PASSWORD':'password',
+        'HOST':'localhost',
+        'PORT':'5432'
+
+
     }
 }
 
@@ -108,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+#TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -132,8 +145,33 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
+TIME_ZONE = 'Asia/Kolkata'  # or your preferred time zone
+USE_TZ = True
+CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #MEDIA FILES CONFIGURATION
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR / 'media'
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0' 
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+
+#celery beat settings
+CELERY_BEAT_SHEDULER = 'django_celery_beat.schedulers:DatabasesScheduler'
+
+#email settings
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')

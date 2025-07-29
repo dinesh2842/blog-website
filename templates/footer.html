@@ -1,9 +1,26 @@
 {% load static %}
 <footer class="py-5 text-center text-body-secondary bg-body-tertiary">
-  <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+  <!-- <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p> -->
   <p class="mb-0">
-    <a href="#">Back to top</a>
+    <a href="">Back to top</a>
   </p>
+  <form method="POST" action="{% url 'subscribe' %}">
+    {% csrf_token %}
+  <div class="container">
+    <h2>Subscribe to our Newsletter</h2>
+
+  </div>
+
+  <div class="container" >
+    <input type="text" placeholder="Name" name="name" required>
+    <input type="text" placeholder="Email address" name="mail" required>
+    
+  </div>
+  <br>
+  <div class="container">
+    <input type="submit" value="Subscribe">
+  </div>
+</form>
 </footer>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 

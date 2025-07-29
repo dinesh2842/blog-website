@@ -3,6 +3,18 @@ from .models import *
 from django.shortcuts import get_object_or_404
 from django.db.models import Q,Count
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+#from .tasks import send_mail_func
+#from .tasks import fun
+from mailfireapp.tasks import *
+from .tasks import *
+
+# def testview(request):
+#   fun.delay()
+#   return HttpResponse('Done')
+
+def send_mail_to_all_users(request):
+  send_mail_func.delay()
+  return HttpResponse("Email has been sent successfully")
 
 def home(request):
   categories = Category.objects.all()
@@ -50,11 +62,13 @@ def category(request,category_id):
 
 def blogdeatil(request,slug):
   single_post=get_object_or_404(Blogs,slug=slug,status='published')
+  latestpost_list = Blogs.objects.all().order_by('-created_at')[:3]
 
 
   
   context={
     'single_post':single_post,
+    'latestpost_list':latestpost_list,
     
   }
   return render(request,'blogs.html',context)
@@ -72,3 +86,38 @@ def search(request):
 
 def register(request):
   return render(request,'register.html')
+
+def news_letter_subscription(request):
+  if request.method == 'POST':
+    name = request.POST.get('name')
+    email = request.POST.get('mail')
+    mailed = Subscribe(
+      name=name,
+      email=email
+    )
+    mailed.save()
+    return redirect('index')
+  return redirect(request,'index.html')
+
+# def send_mail_to_all_users(request):
+#     #print("View was triggered")
+#     send_mail_func.delay()
+#     return HttpResponse('Email has been sent successfully')
+  
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        phone = request.POST.get('phone')
+
+        # Save contact in DB
+        contact_obj = Contact(name=name, email=email, subject=subject, phone=phone)
+        contact_obj.save()
+
+        # Trigger Celery tasks for sending emails asynchronously
+        send_contact_email_to_team.delay(name, email, subject, phone)
+        send_acknowledgement_email.delay(name, email)
+
+        return redirect('index')
+    return render(request, 'contact.html')
